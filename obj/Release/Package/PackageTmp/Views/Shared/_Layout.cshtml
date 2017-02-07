@@ -1,0 +1,81 @@
+﻿@using System.Web.UI.WebControls
+@using DashBoard.Helpers
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />    
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-3.1.1.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        function myFunction() {
+            var x = document.getElementById("myTopnav");
+            if (x.className === "topnav") {
+                x.className += " responsive";
+            } else {
+                x.className = "topnav";
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="page">
+              <div style="background-color: #0096DF;">
+                <img src="@Url.Content("~/Content/Image/logo-AMsaxum.png")" alt=""/>
+                <span class="pull-right">
+                <span style="padding: 11px;border-right: thick solid #008b8b; "><img src="@Url.Content("~/Content/Image/ico-print.png")" alt="" style="cursor: pointer"/></span>
+                <span style="padding: 11px;border-right: thick solid #008b8b; "><img src="@Url.Content("~/Content/Image/ico-configuracion.png")" alt="" style="cursor: pointer"/></span>
+                <span style="padding: 11px;border-right: thick solid #008b8b; "><img src="@Url.Content("~/Content/Image/ico-salir.png")" alt="" style="cursor: pointer"/></span>
+                </span>
+            </div>
+    <div id="header">
+        @* <div id="title">
+                <h1>DashBoard</h1>
+            </div>*@
+        @*    <div id="logindisplay">
+                @Html.Partial("_LogOnPartial")
+            </div>*@
+        @*<div id="menucontainer">
+                <ul id="menu">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Invoiced", "Index", "Invoiced")</li>
+                    <li>@Html.ActionLink("Pending Noa", "Index", "PendingNOA")</li>
+                    <li>@Html.ActionLink("Contract Renewals", "Index", "PendingRenewals")</li>
+                    <li>@Html.ActionLink("Forecast", "Index", "Forecast")</li>
+                </ul>
+            </div>*@
+        <div class="pull-right" style="margin-top: -30px;">
+                <span href="#" class="btn btn-info btn-lg">
+          <span class="glyphicon glyphicon-user"></span> Lucas 
+        </span>
+        </div>
+        <div id="menucontainer">
+        <ul class="">
+    @Html.MenuItem("Home", "Index", "Home")
+    @Html.MenuItem("Forecast", "Index", "Forecast")
+    @Html.MenuItem("Invoiced", "Index", "Invoiced")
+    @Html.MenuItem("Contract Renewals", "Index", "ContractRenewals")                 
+        </ul>
+        </div>
+    </div>
+    <div id="main">
+
+        @RenderBody()
+    </div>
+    <div id="footer" style="background: #555555; height: 43px; border-radius: 0px;">
+        <img src="@Url.Content("~/Content/Image/logo-AMsaxum.png")" alt="" style="display: inline" class="pull-left"/>
+                <span >
+        <ul style="margin-left: 20px;">
+    @Html.MenuItem("Home", "Index", "Home")
+    @Html.MenuItem("Forecast", "Index", "Forecast")
+    @Html.MenuItem("Invoiced", "Index", "Invoiced")
+    @Html.MenuItem("Contract Renewals", "Index", "ContractRenewals")                 
+        </ul>
+        </span>
+    </div>
+</div>
+</body>
+</html>

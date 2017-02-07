@@ -1,0 +1,26 @@
+﻿@model DashBoard.Models.Login.Login
+           
+@{
+    ViewBag.Title = "Index";
+    Layout = null;    
+}
+<link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />    
+<link href="@Url.Content("~/Content/signin.css")" rel="stylesheet" type="text/css" />       
+<script src="@Url.Content("~/Scripts/jquery-3.1.1.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/bootstrap.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "form-signin" }))
+{
+    <h2 class="form-signin-heading">Please sign in DashBoard</h2>
+    <label for="inputEmail" class="sr-only">Email address</label>
+    @Html.TextBoxFor(x=>x.UserName,new {@class="form-control",placeholder="Email address", required="", autofocus=""})
+    <label for="inputPassword" class="sr-only">Password</label>
+    @Html.PasswordFor(x => x.Password, new { @class = "form-control", placeholder="Password" ,required=""})
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+}
+

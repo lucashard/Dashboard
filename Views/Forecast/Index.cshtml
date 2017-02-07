@@ -1,0 +1,170 @@
+﻿@{
+    ViewBag.Title = "Forecast";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+<script src="@Url.Content("~/Scripts/jquery.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Hightchart/NuevaVersion/highcharts.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Hightchart/highcharts-more.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Hightchart/exporting.js")" type="text/javascript"></script>
+
+ 
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ObtainListResultGoogle", "Forecast")',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+
+            success: function (response) {
+                graphicforecasted(response.data.Forecast, response.data.Client, response.data.TotalClient, response.data.TotalForecast);
+            },
+            error: function (response) {
+                alert(response);
+            }
+
+        });
+    });
+
+    function graphicforecasted(forecast, client, totalclient, totalforecast) {
+        totalforecast += "0";
+        var total = parseInt(totalforecast);
+        $('#graphic').highcharts({
+
+                chart: {
+                    type: 'gauge',
+                    plotBorderWidth: 1,
+                    plotBackgroundColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                        stops: [
+                            [0, '#FFF4C6'],
+                            [0.3, '#FFFFFF'],
+                            [1, '#FFF4C6']
+                        ]
+                    },
+                    plotBackgroundImage: null,
+                    height: 200
+                },
+                 
+                credits: {
+                    enabled: false
+                },
+                title: {
+                    text: 'Forecasted'
+                },
+
+                pane: [{
+                    startAngle: -45,
+                    endAngle: 45,
+                    background: null,
+                    center: ['25%', '145%'],
+                    size: 300
+                }, {
+                    startAngle: -45,
+                    endAngle: 45,
+                    background: null,
+                    center: ['75%', '145%'],
+                    size: 300
+                }],
+
+                tooltip: {
+                    enabled: false
+                },
+
+                yAxis: [{
+                    min: 0,
+                    max: 10000000,
+                    minorTickPosition: 'outside',
+                    tickPosition: 'outside',
+                    labels: {
+                        rotation: 'auto',
+                        distance: 0
+                    },
+                    plotBands: [{
+                        from: 0,
+                        to: forecast,
+                    
+                        color: '#C02316',
+                        innerRadius: '100%',
+                        outerRadius: '105%'
+                    }],
+                    pane: 0,
+                    title: {
+                        text: 'Filed<br/><span style="font-size:8px">' + forecast + ' Millons</span>',
+                        y: -40
+                    }
+                }, {
+                    min: 0,
+                    max: totalclient,
+                    minorTickPosition: 'outside',
+                    tickPosition: 'outside',
+                    labels: {
+                        rotation: 'auto',
+                        distance: 20
+                    },
+                    plotBands: [{
+                        from: 0,
+                        to: client,
+                        color: '#C02316',
+                        innerRadius: '100%',
+                        outerRadius: '105%'
+                    }],
+                    pane: 1,
+                    title: {
+                        text: 'Client<br/><span style="font-size:8px">'+client+'</span>',
+                        y: -40
+                    }
+                }],
+
+                plotOptions: {
+                    gauge: {
+                        dataLabels: {
+                            enabled: false
+                        },
+                        dial: {
+                            radius: '100%'
+                        }
+                    }
+                },
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 357
+                        },
+                        chartOptions: {
+                            legend: {
+                                enabled: false
+                            }
+                        }
+                    }]
+                },
+
+                series: [{
+                    name: 'Channel A',
+                    data: [forecast],
+                    yAxis: 0
+                }, {
+                    name: 'Channel B',
+                    data: [client],
+                    yAxis: 1
+                }]
+
+            },
+
+            // Let the music play
+            function (chart) {
+
+
+            });
+    }
+
+</script>
+<div id="graphic" ></div>

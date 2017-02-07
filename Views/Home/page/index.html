@@ -1,0 +1,511 @@
+<head>
+
+<script src="jquery.min.js" type="text/javascript"></script>
+<script src="/Hightchart/NuevaVersion/highcharts.js" type="text/javascript"></script>
+<script src="/Hightchart/highcharts-more.js" type="text/javascript"></script>
+<script src="/Hightchart/exporting.js" type="text/javascript"></script>
+<script src="numeral.min.js" type="text/javascript"></script>
+
+
+
+
+<script type="text/javascript">
+    var lista, listanoa, listafollowup;
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ObtainListResult", "Invoiced")',
+            dataType: 'json',
+            async: false,
+            success: function (response) {
+			
+                lista = response.listadouble;
+                listanoa = response.listanoa;
+                listafollowup = response.listafollowup;
+                graphic(lista);
+                graphic2(listanoa);
+                graphic3(listafollowup);
+            },
+            error: function (response) {
+                alert(response);
+            }
+
+        });
+
+        
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ObtainListResultGoogle", "ContractsRenew")',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            async: false,
+            success: function (response) {
+                graphiccontractsrewals(response.data);
+                graphicpendingrenewals(response.pending);
+            },
+            error: function (response) {
+                alert("error");
+            }
+
+        });
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ObtainListResultGoogle", "Forecast")',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+
+            success: function (response) {
+                graphicforecasted(response.data.Forecast, response.data.Client, response.data.TotalClient, response.data.TotalForecast);
+            },
+            error: function (response) {
+                alert(response);
+            }
+
+        });
+
+
+    });
+
+
+    function graphic(lista) {
+      
+        $('#invoiced').highcharts({
+            chart: {
+                renderTo: 'containerInvoiced',
+                type: 'line'
+            },
+            tooltip: {
+                formatter: function () {
+                    return "$" + this.y + ' ' + this.x;
+                }
+            },
+            title: {
+                text: 'Invoiced'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: [{
+                name: '',
+                data: lista
+            }]
+        });
+    };
+
+    function graphic2(lista) {
+        $('#containernoa').highcharts({
+            chart: {
+                renderTo: 'containerWaiting',
+                type: 'line'
+            },
+            lang: {
+      	thousandsSep: ','
+   },
+               yAxis: { // Primary yAxis
+            labels: {
+                 formatter: function(){
+                     return this.value;
+         
+        }}},
+            tooltip: {
+                formatter: function () {
+
+                    return "$" + numeral(this.y).format('0,0');
+                }
+            },
+            title: {
+                text: 'Waiting to be invoiced'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: [{
+                name: '',
+                data: lista
+            }]
+        });
+    };
+    function graphic3(lista) {
+        $('#followup').highcharts({
+            chart: {
+                renderTo: 'containerOfClaims',
+                type: 'column'
+            },
+            title: {
+                text: '#Of Claims (Pending Noa)'
+            },
+            xAxis: {
+                categories: [
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: ''
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.y}</span><table>',
+                pointFormat: '',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+                {
+                    name: ' ',
+                    data: lista,
+                    dataLabels: {
+                        enabled: true,
+                        color: 'black',
+                        align: 'right',
+                        format: '{point.y:.1f}', // one decimal
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+
+                }
+            ]
+        });
+        }
+
+        function graphiccontractsrewals(lista) {
+            $('#contractsrewals').highcharts({
+                chart: {
+                    renderTo: 'containerContractsRenewals',
+                    type: 'column'
+                },
+                title: {
+                    text: 'Contracts Renewed'
+                },
+                xAxis: {
+                    categories: [
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun'
+                ],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: ''
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.y}</span><table>',
+                    pointFormat: '',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [
+                {
+                    name: ' ',
+                    data: lista,
+                    dataLabels: {
+                        enabled: true,
+                        color: 'black',
+                        align: 'right',
+                        format: '{point.y:.1f}', // one decimal
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+
+                }
+            ]
+            });
+        }
+        function graphicpendingrenewals(lista) {
+            $('#pendingrenewals').highcharts({
+                chart: {
+                    renderTo: 'containerPendingRenewals',
+                    type: 'column'
+                },
+                title: {
+                    text: 'Pending Renewals'
+                },
+                xAxis: {
+                    categories: [
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun'
+                ],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: ''
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.y}</span><table>',
+                    pointFormat: '',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [
+                {
+                    name: ' ',
+                    data: lista,
+                    dataLabels: {
+                        enabled: true,
+                        color: 'black',
+                        align: 'right',
+                        format: '{point.y:.1f}', // one decimal
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+
+                }
+            ]
+            });
+        }
+
+        function graphicforecasted(forecast, client, totalclient, totalforecast) {
+            totalforecast += "0";
+            var total = parseInt(totalforecast);
+            $('#graphic').highcharts({
+
+                chart: {
+                    type: 'gauge',
+                    plotBorderWidth: 1,
+                    plotBackgroundColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                        stops: [
+                            [0, '#FFF4C6'],
+                            [0.3, '#FFFFFF'],
+                            [1, '#FFF4C6']
+                        ]
+                    },
+                    plotBackgroundImage: null,
+                    height: 200
+                },
+
+                title: {
+                    text: 'Forecasted'
+                },
+
+                pane: [{
+                    startAngle: -45,
+                    endAngle: 45,
+                    background: null,
+                    center: ['25%', '145%'],
+                    size: 300
+                }, {
+                    startAngle: -45,
+                    endAngle: 45,
+                    background: null,
+                    center: ['75%', '145%'],
+                    size: 300
+                }],
+
+                tooltip: {
+                    enabled: false
+                },
+
+                yAxis: [{
+                    min: 0,
+                    max: 10000000,
+                    minorTickPosition: 'outside',
+                    tickPosition: 'outside',
+                    labels: {
+                        rotation: 'auto',
+                        distance: 0
+                    },
+                    plotBands: [{
+                        from: 0,
+                        to: forecast,
+
+                        color: '#C02316',
+                        innerRadius: '100%',
+                        outerRadius: '105%'
+                    }],
+                    pane: 0,
+                    title: {
+                        text: 'Filed<br/><span style="font-size:8px">' + forecast + ' Millons</span>',
+                        y: -40
+                    }
+                }, {
+                    min: 0,
+                    max: totalclient,
+                    minorTickPosition: 'outside',
+                    tickPosition: 'outside',
+                    labels: {
+                        rotation: 'auto',
+                        distance: 20
+                    },
+                    plotBands: [{
+                        from: 0,
+                        to: client,
+                        color: '#C02316',
+                        innerRadius: '100%',
+                        outerRadius: '105%'
+                    }],
+                    pane: 1,
+                    title: {
+                        text: 'Client<br/><span style="font-size:8px">' + client + '</span>',
+                        y: -40
+                    }
+                }],
+
+                plotOptions: {
+                    gauge: {
+                        dataLabels: {
+                            enabled: false
+                        },
+                        dial: {
+                            radius: '100%'
+                        }
+                    }
+                },
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 357
+                        },
+                        chartOptions: {
+                            legend: {
+                                enabled: false
+                            }
+                        }
+                    }]
+                },
+
+                series: [{
+                    name: 'Channel A',
+                    data: [forecast],
+                    yAxis: 0
+                }, {
+                    name: 'Channel B',
+                    data: [client],
+                    yAxis: 1
+                }]
+
+            },
+
+            // Let the music play
+            function (chart) {
+
+
+            });
+        }
+</script>
+</body>
+<head>
+
+
+
+
+
+<div style="border: 2px solid yellow;padding: 10px 40px; background: #dddddd;border-radius: 25px;margin: 20px; ">
+<div class="row">
+    <div id="graphic" class="span7 offset5"></div>
+</div>
+</div>
+
+<div style="border: 2px solid blue; padding: 10px 40px; background: #dddddd; border-radius: 25px;margin: 20px;">
+    <div class="row">
+        <div class="col-sm-6 col-lg-6 col-xs-6" id="invoiced"></div>
+        <div class="col-sm-6 col-lg-6 col-xs-6" id="containernoa"></div>
+    </div>
+    <div class="row"></div>
+    <div class="row" style="margin-top: 11px;">
+        <div class="col-sm-12 col-lg-12 col-xs-12" id="followup"></div>
+    </div>
+</div>
+<div style="border: 2px solid red; padding: 10px 40px; background: #dddddd; border-radius: 25px; margin: 20px;">
+    <div class="row">
+        <div class="col-sm-6 col-lg-6 col-xs-6" id="contractsrewals"></div>
+        <div class="col-sm-6 col-lg-6 col-xs-6" id="pendingrenewals"></div>
+    </div>
+</div>
+</head>

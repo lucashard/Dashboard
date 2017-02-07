@@ -1,0 +1,88 @@
+﻿<script src="@Url.Content("~/Scripts/jquery.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Hightchart/highcharts.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Hightchart/exporting.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        
+        $.ajax({
+            type: "GET",
+            //url: '@Url.Action("ObtainListResult", "PendingNOA")',
+            url: '@Url.Action("ObtainListResultGoogle", "PendingNOA")',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                graphic(response.data, response.data2, response.data3);
+            },
+            error: function(response) {
+                alert("error");
+            }
+
+        });
+
+
+    });
+
+    function graphic(lista,totalclient,implemented) {
+        $('#container').highcharts({
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Lean implementation (Tracking)'
+            },
+            xAxis: {
+                categories:lista,// ['Team Work', 'Nick', 'Jesse','Jeff','Henry'],
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' '
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 80,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                shadow: true
+            },
+            credits: {
+                enabled: false
+            },
+            series: [
+             {
+                name: 'Total # Clients',
+                data: totalclient
+            }, {
+                name: 'Implemented',
+                data: implemented
+            }]
+        });
+    }
+</script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>

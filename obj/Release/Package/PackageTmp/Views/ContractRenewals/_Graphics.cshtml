@@ -1,0 +1,159 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ObtainListResultGoogle", "ContractRenewals")',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            async:false,
+            success: function (response) {
+                graphic(response.data);
+                graphic2(response.pending);
+            },
+            error: function (response) {
+                alert("error");
+            }
+
+        });
+
+
+    });
+
+    function graphic(lista) {
+        $('#contractsrewals').highcharts({
+            chart: {
+                renderTo: 'containerContractsRenewals',
+                type: 'column'
+            },
+            title: {
+                text: 'Contracts Renewed'
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                categories: [
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: ''
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.y}</span><table>',
+                pointFormat: '',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+                {
+                    name: ' ',
+                    data: lista,
+                    dataLabels: {
+                        enabled: true,
+                        color: 'black',
+                        align: 'right',
+                        format: '{point.y:.1f}', // one decimal
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+
+                }
+            ]
+        });
+    }
+    function graphic2(lista) {
+        $('#pendingrenewals').highcharts({
+            chart: {
+                renderTo: 'containerPendingRenewals',
+                type: 'column'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: 'Pending Renewals'
+            },
+            xAxis: {
+                categories: [
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: ''
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.y}</span><table>',
+                pointFormat: '',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+                {
+                    name: ' ',
+                    data: lista,
+                    dataLabels: {
+                        enabled: true,
+                        color: 'black',
+                        align: 'right',
+                        format: '{point.y:.1f}', // one decimal
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+
+                }
+            ]
+        });
+    }
+</script>
+
+

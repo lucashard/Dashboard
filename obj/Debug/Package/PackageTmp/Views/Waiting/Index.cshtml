@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Invoiced";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Waiting to be invoiced</h2>
+
+
+
+<script src="@Url.Content("~/Scripts/jquery.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Hightchart/highcharts.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Hightchart/exporting.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var lista;
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ObtainListResult", "Waiting")',
+            dataType: 'json',
+            //            contentType: false,
+            //            processData: false,
+            async: false,
+            success: function (response) {
+                lista = response;
+                graphic(lista);
+            },
+            error: function (response) {
+                //alert(error);
+                debugger;
+                alert(response);
+            }
+
+        });
+
+
+    });
+    function graphic(lista) {
+        $('#container').highcharts({
+            chart: {
+                type: 'line'
+            },
+            tooltip: {
+                formatter: function () {
+                    return "$" + this.y + ' ' + this.x;
+                }
+            },
+            title: {
+                text: 'Waiting to be invoiced'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: [{
+                name: '',
+                data: lista
+            }]
+        });
+    };
+</script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>

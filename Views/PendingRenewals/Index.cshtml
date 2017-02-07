@@ -1,0 +1,82 @@
+﻿<script src="@Url.Content("~/Scripts/jquery.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Hightchart/highcharts.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Hightchart/exporting.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ObtainListResultGoogle", "PendingRenewals")',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function(response) {
+             //   alert(response.data);
+                graphic(response.data);
+            },
+            error: function(response) {
+                alert("error");
+            }
+
+        });
+
+
+    });
+
+    function graphic(lista) {
+        $('#container').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Pending Renewals'
+            },
+            xAxis: {
+                categories: [
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: ''
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+                {
+                    name: ' ',
+                    data: lista
+
+                }
+            ]
+        });
+    }
+</script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
